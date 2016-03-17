@@ -1,0 +1,18 @@
+#!/bin/bash
+# Make a new homework folder, folder number specified in arg1
+
+# Check if argument exits
+if [[ $# -eq 1 ]]; then
+	re='^[0-9]+$'
+	[[ $1 =~ $re ]] || { echo "$1: Invalid argument" >&2; echo "Usage: mkhw <hwnum>"; exit 1; }
+	# Create hw$1 folder
+	[[ -d ./hw$1 ]] && { echo "hw$1 already exists" >&2; exit 1; } || mkdir ./hw$1
+	# Copy template file to hw$1 folder and rename it
+	[[ -f ./template.tex ]] && { cp ./template.tex ./hw$1/; mv ./hw$1/template.tex ./hw$1/hw$1.tex; } ||  echo "No template file exists" >&2
+	# Change homework number in .tex file
+	[[ -f ./hw$1/hw$1.tex ]] && sed -i '' "s/hwnum{1}/hwnum{$1}/" ./hw$1/hw$1.tex
+else
+	echo "usage: mkhw <hwnum>" >&2
+	exit 1
+fi
+	
